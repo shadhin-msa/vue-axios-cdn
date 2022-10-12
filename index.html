@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Vue Js Axios in CDN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- <link rel='stylesheet' type='text/css' media='screen' href='main.css'> -->
+    <!-- <script src='main.js'></script> -->
+  </head>
+  <body>
+    <h1>This title is outside Vue js</h1>
+
+    <div id="app">
+      <h1>{{title}}</h1>
+      {{ message }}
+
+      <div v-if="joke !== '' ">
+        <h2>Joke</h2>
+        <p>this is {{joke}}</p>
+      </div>
+
+      <p v-if="loading">Loading...</p>
+
+      <button @click="getAJoke">get a new joke</button>
+    </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="module">
+      import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+      console.log({ aa: axios })
+      createApp({
+        data() {
+          return {
+            message: 'Hello Vue!',
+            title: 'this title inside Vue js',
+            joke: '',
+            loading: false,
+          }
+        },
+
+        mounted() {
+          // axios
+          //   .get('https://api.coindesk.com/v1/bpi/currentprice.json')
+          //   .then((response) => (this.message = response))
+        },
+        methods: {
+          getAJoke() {
+            this.loading = true
+            // Make a request for a user with a given ID
+            axios
+              .get('https://official-joke-api.appspot.com/random_joke')
+              .then((response) => {
+                // handle success
+                console.log(response)
+                if (response.data) {
+                  this.joke = response.data.setup
+                }
+              })
+              .catch((error) => {
+                // handle error
+                console.log(error)
+              })
+              .then(() => {
+                // always executed
+                this.loading = false
+              })
+            console.log('looking new joke')
+          },
+        },
+      }).mount('#app')
+    </script>
+  </body>
+</html>
